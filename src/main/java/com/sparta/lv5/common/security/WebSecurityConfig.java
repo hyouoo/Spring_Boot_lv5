@@ -1,5 +1,6 @@
 package com.sparta.lv5.common.security;
 
+import com.sparta.lv5.common.exception.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,8 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final MyUserDetailsService myUserDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -60,9 +63,12 @@ public class WebSecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers("/api/user/**").permitAll()
                 .requestMatchers("/swagger/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/lectures/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .anyRequest().authenticated()
         );
+
+        http.exceptionHandling((handling) -> handling
+                .authenticationEntryPoint(customAuthenticationEntryPoint));
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
