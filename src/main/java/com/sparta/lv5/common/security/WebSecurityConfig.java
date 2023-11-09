@@ -26,7 +26,6 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final MyUserDetailsService myUserDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
-
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean

@@ -16,10 +16,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     private final HandlerExceptionResolver handlerExceptionResolver;
 
-    private final MyExceptionHandler myExceptionHandler;
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        handlerExceptionResolver.resolveException(request, response, myExceptionHandler, authException);
+        handlerExceptionResolver.resolveException(request, response, null, authException);
     }
 }
