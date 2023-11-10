@@ -26,9 +26,9 @@ public class UserController {
 
     @DeleteMapping("")
     public ResponseEntity<String> deleteUser(@AuthenticationPrincipal MyUserDetails userDetails) {
-        User user = userDetails.getUser();
-        userService.deleteUser(user);
+        String email = userDetails.getUser().getEmail();
+        userService.deleteUser(userDetails.getUser());
         return ResponseEntity.accepted()
-                .body(String.format("%s 계정의 탈퇴 요청이 정상적으로 처리되었습니다.", user.getEmail()));
+                .body(String.format("%s 계정의 탈퇴 요청이 정상적으로 처리되었습니다.", email));
     }
 }
