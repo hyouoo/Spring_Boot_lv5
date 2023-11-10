@@ -14,7 +14,7 @@ import java.net.URI;
 
 @RestControllerAdvice
 public class MyExceptionHandler {
-    // InsufficientAuthenticationException (AccessDeniedException)
+
     @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class, AccessDeniedException.class, AuthenticationException.class})
     public ResponseEntity<ErrorMessage> authenticationException(RuntimeException ex) {
         String message = findExceptionCase(ex);

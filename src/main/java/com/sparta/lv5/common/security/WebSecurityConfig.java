@@ -2,10 +2,13 @@ package com.sparta.lv5.common.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -25,7 +27,6 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final MyUserDetailsService myUserDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
-//    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -50,6 +51,11 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public AuthenticationEventPublisher authenticationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        return new DefaultAuthenticationEventPublisher(applicationEventPublisher);
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
 
@@ -64,9 +70,6 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                 .anyRequest().authenticated()
         );
-
-//        http.exceptionHandling((handling) -> handling
-//                .authenticationEntryPoint(customAuthenticationEntryPoint));
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);

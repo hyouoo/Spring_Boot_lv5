@@ -1,16 +1,15 @@
 package com.sparta.lv5.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.lv5.common.exception.ErrorMessage;
 import com.sparta.lv5.users.dto.LoginRequestDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.SneakyThrows;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
@@ -24,7 +23,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         setFilterProcessesUrl("/api/user/login");
     }
 
-    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
@@ -36,8 +34,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             );
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
-        } catch (BadCredentialsException | UsernameNotFoundException e) {
-            return null;
         }
     }
 
@@ -49,7 +45,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-        throw failed;
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        ErrorMessage errorMessage = new ErrorMessage(failed.getMessage(), HttpStatus.UNAUTHORIZED);
+        String msg = new ObjectMapper().writeValueAsString(errorMessage);
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("utf-8");
+        response.getWriter().write(msg);
     }
 }
