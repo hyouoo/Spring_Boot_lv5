@@ -1,7 +1,7 @@
 package com.sparta.lv5.common.security;
 
-import com.sparta.lv5.users.User;
-import com.sparta.lv5.users.UserRole;
+import com.sparta.lv5.accounts.entity.Account;
+import com.sparta.lv5.accounts.entity.UserRole;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,11 +15,11 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class MyUserDetails implements UserDetails {
 
-    private final User user;
+    private final Account account;
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        UserRole userRole = user.getRole();
+        UserRole userRole = account.getRole();
         String authority = userRole.getAuthority();
 
         SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority);
@@ -31,16 +31,16 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return account.getEmail();
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return account.getPassword();
     }
 
     public UserRole getRole() {
-        return user.getRole();
+        return account.getRole();
     }
 
     @Override

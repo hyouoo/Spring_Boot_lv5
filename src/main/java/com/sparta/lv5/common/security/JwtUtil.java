@@ -1,6 +1,6 @@
 package com.sparta.lv5.common.security;
 
-import com.sparta.lv5.users.UserRole;
+import com.sparta.lv5.accounts.entity.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;

@@ -4,6 +4,8 @@ import com.sparta.lv5.products.entity.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 public class ProductResponseDto {
@@ -12,14 +14,7 @@ public class ProductResponseDto {
     private Integer amount;
     private String info;
     private String category;
-
-    public ProductResponseDto(ProductRegisterDto registerDto) {
-        name = registerDto.getName();
-        price = registerDto.getPrice();
-        amount = registerDto.getAmount();
-        info = registerDto.getInfo();
-        category = registerDto.getCategory();
-    }
+    private List<ImageResponseDto> images;
 
     public ProductResponseDto(Product product) {
         name = product.getName();
@@ -27,5 +22,6 @@ public class ProductResponseDto {
         amount = product.getAmount();
         info = product.getInfo();
         category = product.getCategory();
+        images = product.getImages().stream().map(ImageResponseDto::new).toList();
     }
 }
