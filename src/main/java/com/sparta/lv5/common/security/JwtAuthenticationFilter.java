@@ -1,8 +1,8 @@
 package com.sparta.lv5.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.lv5.accounts.dto.LoginRequestDto;
 import com.sparta.lv5.common.exception.ErrorMessage;
-import com.sparta.lv5.users.dto.LoginRequestDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

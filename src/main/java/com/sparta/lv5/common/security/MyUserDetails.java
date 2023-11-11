@@ -1,25 +1,30 @@
 package com.sparta.lv5.common.security;
 
-import com.sparta.lv5.users.User;
-import com.sparta.lv5.users.UserRole;
+import com.sparta.lv5.accounts.entity.Account;
+import com.sparta.lv5.accounts.entity.UserRole;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
-public class MyUserDetails implements UserDetails {
+public class MyUserDetails extends User implements UserDetails {
 
-    private final User user;
+    private final Account account;
+
+    public MyUserDetails(Account account) {
+        super(account.getEmail(), account.getPassword(), List.of(new SimpleGrantedAuthority(account.getRole().getAuthority())));
+        this.account = account;
+    }
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
-        UserRole userRole = user.getRole();
+        UserRole userRole = account.getRole();
         String authority = userRole.getAuthority();
 
         SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority);
@@ -31,16 +36,16 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return account.getEmail();
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return account.getPassword();
     }
 
     public UserRole getRole() {
-        return user.getRole();
+        return account.getRole();
     }
 
     @Override

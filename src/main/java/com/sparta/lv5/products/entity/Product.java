@@ -1,9 +1,13 @@
 package com.sparta.lv5.products.entity;
 
 import com.sparta.lv5.products.dto.ProductRegisterDto;
+import com.sparta.lv5.wishes.entity.Wish;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,11 +32,19 @@ public class Product extends TimeStamp {
     @Column(length = 50)
     private String category;
 
+    @OneToMany(mappedBy = "product", orphanRemoval = true)
+    private List<Image> images;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<Wish> wishes;
+
     public Product(ProductRegisterDto registerDto) {
         name = registerDto.getName();
         price = registerDto.getPrice();
         amount = registerDto.getAmount();
         info = registerDto.getInfo();
         category = registerDto.getCategory();
+        images = new ArrayList<>();
+        wishes = new ArrayList<>();
     }
 }

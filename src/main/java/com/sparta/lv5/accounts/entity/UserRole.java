@@ -1,4 +1,4 @@
-package com.sparta.lv5.users;
+package com.sparta.lv5.accounts.entity;
 
 import lombok.Getter;
 
