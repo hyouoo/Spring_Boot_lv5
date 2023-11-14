@@ -48,4 +48,11 @@ public class ProductController {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    @Secured(UserRole.Authority.ADMIN)
+    @DeleteMapping("/images/{imageId}")
+    public void deleteImage(@PathVariable Integer imageId) {
+        imageService.deleteImage(imageId);
+    }
+
 }
