@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -43,5 +45,17 @@ public class ImageService {
         imageRepository.save(newimage);
 
         return new ImageResponseDto(newimage);
+    }
+
+
+    public void deleteImage(Integer imageId) {
+        Image image = imageRepository.findById(Long.valueOf(imageId)).orElseThrow(
+                () -> new NullPointerException("해당 이미지가 없습니다.")
+        );
+        Pattern pattern = Pattern.compile("(images/([^/]+))");
+        Matcher matcher = pattern.matcher(image.getSrcurl());
+        String key = matcher.group(1);
+        imageRepository.delete(image);
+        s3Template.deleteObject(bucket, key);
     }
 }
