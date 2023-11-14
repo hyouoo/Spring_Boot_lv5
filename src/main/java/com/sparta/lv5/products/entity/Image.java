@@ -1,6 +1,5 @@
 package com.sparta.lv5.products.entity;
 
-import com.sparta.lv5.products.dto.ImageUploadDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,16 +16,16 @@ public class Image {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String srcurl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Image(ImageUploadDto uploadDto, Product product) {
-        name = uploadDto.getName();
-        srcurl = uploadDto.getSrcurl();
+    public Image(String name, String url, Product product) {
+        this.name = name;
+        this.srcurl = url;
         this.product = product;
         product.getImages().add(this);
     }

@@ -5,6 +5,7 @@ import com.sparta.lv5.accounts.entity.Account;
 import com.sparta.lv5.products.ProductRepository;
 import com.sparta.lv5.products.entity.Product;
 import com.sparta.lv5.wishes.dto.WishListDto;
+import com.sparta.lv5.wishes.dto.WishResponseDto;
 import com.sparta.lv5.wishes.entity.Wish;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,9 +35,13 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishListDto> getWishList(Account account) {
-        return wishRepository.findAllByAccountId(account.getId()).stream()
+    public WishResponseDto getWishList(Account account) {
+        List<WishListDto> wishListDtos = wishRepository.findAllByAccountId(account.getId()).stream()
                 .map(WishListDto::new).toList();
+        Double totalPrice = wishListDtos.stream()
+                .mapToDouble(wish -> wish.getProductResponseDto().getPrice() * wish.getAmount())
+                .sum();
+        return new WishResponseDto(wishListDtos, totalPrice);
     }
 
 
