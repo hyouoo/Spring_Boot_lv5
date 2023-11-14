@@ -4,14 +4,11 @@ import com.sparta.lv5.accounts.entity.Account;
 import com.sparta.lv5.common.tools.LoginUser;
 import com.sparta.lv5.products.entity.Product;
 import com.sparta.lv5.wishes.dto.MessageDto;
-import com.sparta.lv5.wishes.dto.WishListDto;
+import com.sparta.lv5.wishes.dto.WishResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j(topic = "Account Check")
 @RestController
@@ -30,8 +27,8 @@ public class WishController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<WishListDto>> getWislList(@LoginUser Account account) {
-        return ResponseEntity.ok().body(wishService.getWishList(account));
+    public WishResponseDto getWishList(@LoginUser Account account) {
+        return wishService.getWishList(account);
     }
 
     @PutMapping("")
@@ -41,8 +38,8 @@ public class WishController {
         return new MessageDto(msg, HttpStatus.OK);
     }
 
-    @DeleteMapping("")
-    public MessageDto deleteWish(Integer wishId) {
+    @DeleteMapping("/{wishId}")
+    public MessageDto deleteWish(@PathVariable Integer wishId) {
         Product product = wishService.deleteWish(wishId);
         String msg = String.format("%s 상품이 장바구니에서 삭제되었습니다", product.getName());
         return new MessageDto(msg, HttpStatus.OK);

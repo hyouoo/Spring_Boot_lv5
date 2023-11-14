@@ -1,12 +1,9 @@
 package com.sparta.lv5.products;
 
-import com.sparta.lv5.products.dto.ImageUploadDto;
 import com.sparta.lv5.products.dto.ProductRegisterDto;
 import com.sparta.lv5.products.dto.ProductResponseDto;
-import com.sparta.lv5.products.entity.Image;
 import com.sparta.lv5.products.entity.Product;
 import com.sparta.lv5.products.entity.SortBy;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,14 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ImageRepository imageRepository;
 
     public ProductResponseDto addProduct(ProductRegisterDto registerDto) {
         if (productRepository.existsByName(registerDto.getName()))
@@ -44,12 +39,5 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Product> productPage = productRepository.findAllByCategory(cat, pageable);
         return productPage.map(ProductResponseDto::new);
-    }
-
-    public void addImage(@RequestBody @Valid ImageUploadDto uploadDto) {
-        Product product = productRepository.findById(uploadDto.getProductId()).orElseThrow(() ->
-                new NullPointerException("해당 상품이 존재하지 않습니다."));
-        Image newimage = new Image(uploadDto, product);
-        imageRepository.save(newimage);
     }
 }
