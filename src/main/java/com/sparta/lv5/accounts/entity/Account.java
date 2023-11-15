@@ -37,6 +37,8 @@ public class Account {
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
+    private Long kakaoId;
+
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
 
@@ -48,5 +50,18 @@ public class Account {
         address = requestDto.getAddress();
         role = requestDto.isAdmin() ? ADMIN : USER;
         wishes = new ArrayList<>();
+    }
+
+    public Account(String email, String password, UserRole userRole, Long kakaoId) {
+        this.email = email;
+        this.password = password;
+        this.role = userRole;
+        this.kakaoId = kakaoId;
+        wishes = new ArrayList<>();
+    }
+
+    public Account kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
     }
 }
