@@ -26,6 +26,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.time.Duration;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -90,9 +92,13 @@ public class WebSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.addAllowedOrigin("*");
+        configuration.addAllowedOrigin("http://localhost:8080");
+        configuration.addAllowedOrigin("http://ec2-43-200-59-118.ap-northeast-2.compute.amazonaws.com");
+        configuration.addAllowedOrigin("http://ec2-43-200-59-118.ap-northeast-2.compute.amazonaws.com:8080");
+        configuration.addAllowedOrigin("https://ec2-43-200-59-118.ap-northeast-2.compute.amazonaws.com");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
+        configuration.setMaxAge(Duration.ofMinutes(5));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
