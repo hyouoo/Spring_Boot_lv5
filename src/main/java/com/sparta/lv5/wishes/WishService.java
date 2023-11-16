@@ -37,28 +37,31 @@ public class WishService {
     @Transactional(readOnly = true)
     public WishResponseDto getWishList(Account account) {
         List<WishListDto> wishListDtos = wishRepository.findAllByAccountId(account.getId()).stream()
-                .map(WishListDto::new).toList();
+                .map(WishListDto::new)
+                .toList();
         Double totalPrice = wishListDtos.stream()
                 .mapToDouble(wish -> wish.getProductResponseDto().getPrice() * wish.getAmount())
                 .sum();
         return new WishResponseDto(wishListDtos, totalPrice);
     }
 
-
     @Transactional
     public Product modifyWish(Integer wishId, Integer amount) {
-        Wish wish = wishRepository.findById(wishId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 요청입니다.")
-        );
+        Wish wish = findWish(wishId);
         wish.changeAmount(amount);
         return wish.getProduct();
     }
 
+    @Transactional
     public Product deleteWish(Integer wishId) {
-        Wish wish = wishRepository.findById(wishId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 요청입니다.")
-        );
+        Wish wish = findWish(wishId);
+        wish.delParents();
         wishRepository.delete(wish);
         return wish.getProduct();
+    }
+
+    private Wish findWish(Integer wishId) {
+        return wishRepository.findById(wishId).orElseThrow(
+                () -> new IllegalArgumentException("장바구니에 없는 상품입니다."));
     }
 }

@@ -34,6 +34,11 @@ public class Wish {
         account.getWishes().add(this);
     }
 
+    public void delParents() {
+        this.getAccount().getWishes().remove(this);
+        this.getProduct().getWishes().remove(this);
+    }
+
     public void changeAmount(Integer amount) {
         this.amount = amount;
     }
