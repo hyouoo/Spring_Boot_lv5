@@ -82,6 +82,20 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
         );
 
+        http.formLogin((formlogin) ->
+                formlogin.usernameParameter("email")
+                        .passwordParameter("password")
+                        .loginPage("/login.html")
+                        .loginProcessingUrl("/api/user/login")
+                        .successForwardUrl("/swagger/hyouoo")
+                        .permitAll()
+        );
+
+        http.logout((logout) ->
+                logout.logoutSuccessUrl("/login")
+                        .invalidateHttpSession(true)
+        );
+
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
 
