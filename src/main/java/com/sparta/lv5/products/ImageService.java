@@ -63,6 +63,7 @@ public class ImageService {
         } else {
             throw new IllegalArgumentException("일치하는 패턴이 없습니다.");
         }
+        image.delParents();
         imageRepository.delete(image);
         s3Template.deleteObject(bucket, key);
     }

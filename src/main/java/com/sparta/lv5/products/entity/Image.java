@@ -29,4 +29,8 @@ public class Image {
         this.product = product;
         product.getImages().add(this);
     }
+
+    public void delParents() {
+        this.getProduct().getImages().remove(this);
+    }
 }
