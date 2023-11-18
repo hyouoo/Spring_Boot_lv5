@@ -22,7 +22,7 @@ jobs:
 
     steps:
       # (1) 기본 체크아웃
-      - name: Checkout
+      - name: Checkout release
         uses: actions/checkout@v3
        
 	  # (2) JDK 17 세팅
